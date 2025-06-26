@@ -5,56 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>史弟夫數學 - 質數選擇題</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #e0e7ff 0%, #c3dafe 100%);
+            background: linear-gradient(135deg, #f0f4ff 0%, #d6e0fa 50%, #c0d2f0 100%);
             height: 100vh;
-            overflow: hidden; /* 防止捲動 */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .quiz-container {
-            max-height: 90vh; /* 確保容器不超過視窗高度 */
-            overflow-y: auto; /* 若內容溢出，隱藏捲軸 */
-            animation: fadeIn 0.5s ease-in-out;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(5px);
+            animation: fadeInUp 0.6s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .option {
-            transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 0.75rem;
+            background: linear-gradient(145deg, #eef2ff, #e0e7ff);
         }
         .option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         .correct {
-            background-color: #86efac !important;
-            transform: scale(1.02);
+            background: linear-gradient(145deg, #86efac, #6ee7b7) !important;
+            transform: scale(1.03);
+            box-shadow: 0 6px 15px rgba(134, 239, 172, 0.4);
         }
         .wrong {
-            background-color: #f87171 !important;
-            transform: scale(1.02);
+            background: linear-gradient(145deg, #f87171, #ef4444) !important;
+            transform: scale(1.03);
+            box-shadow: 0 6px 15px rgba(248, 113, 113, 0.4);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        #nextBtn, #endBtn, #continueBtn {
+            border-radius: 0.75rem;
+            background: linear-gradient(145deg, #6366f1, #4f46e5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            padding: 0.5rem;
+            font-weight: 500;
+        }
+        #nextBtn:hover, #endBtn:hover, #continueBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+            background: linear-gradient(145deg, #4f46e5, #4338ca);
+        }
+        #summary {
+            background: linear-gradient(145deg, #e0e7ff, #d1e0fa);
+            border-radius: 0.75rem;
+            padding: 0.5rem;
+        }
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-2 font-['Noto_Sans_TC']">
-    <div class="quiz-container bg-white rounded-2xl shadow-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md md:max-w-lg flex flex-col items-center justify-between">
-        <div class="text-center">
+<body class="p-2 font-['Noto_Sans_TC']">
+    <div class="quiz-container p-4 sm:p-6 w-full max-w-sm sm:max-w-md md:max-w-lg flex flex-col items-center justify-between">
+        <div class="text-center w-full">
             <div class="flex justify-center mb-2">
-                <img src="logo.png" alt="史弟夫數學 Logo" class="h-12 sm:h-16">
+                <img src="LOGO.png" alt="史弟夫數學 Logo" class="h-12 sm:h-16" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div class="hidden text-center" style="font-family: 'Pacifico', cursive;">
+                    <span class="text-xl sm:text-2xl font-bold text-indigo-900">史弟夫</span><br>
+                    <span class="text-xl sm:text-2xl font-bold text-indigo-900">數學</span>
+                </div>
             </div>
-            <h1 class="text-xl sm:text-2xl font-bold text-indigo-800 mb-1">史弟夫數學</h1>
-            <h2 class="text-sm sm:text-lg font-semibold text-indigo-700 mb-2">質數選擇題</h2>
+            <h1 class="text-xl sm:text-2xl font-bold text-indigo-900 mb-1" style="font-family: 'Pacifico', cursive;">史弟夫數學</h1>
+            <h2 class="text-sm sm:text-lg font-semibold text-indigo-800 mb-2">質數選擇題</h2>
             <p class="text-center text-gray-600 text-xs sm:text-sm mb-1">請選出以下哪個數字是質數！</p>
+            <p id="progress" class="text-xs sm:text-sm text-gray-700 mb-2 font-medium">進度: 1/10</p>
         </div>
         <div id="options" class="space-y-1 w-full"></div>
         <div id="result" class="mt-2 text-center font-semibold text-sm sm:text-base"></div>
-        <div id="explanation" class="mt-1 text-xs sm:text-sm text-gray-700 bg-gray-100 p-2 rounded hidden"></div>
-        <button id="nextBtn" class="mt-2 w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg hidden" onclick="generateQuiz()">下一題</button>
+        <div id="explanation" class="mt-1 text-xs sm:text-sm text-gray-700 bg-gray-50 p-2 rounded hidden"></div>
+        <button id="nextBtn" class="mt-2 w-full py-2 text-white rounded-lg shadow-md hover:shadow-lg hidden" onclick="nextQuestion()">下一題</button>
+        <div id="summary" class="mt-2 text-center text-sm sm:text-base text-indigo-900 hidden"></div>
+        <div id="buttonGroup" class="button-group hidden">
+            <button id="endBtn" class="flex-1 text-white" onclick="endQuiz()">結束</button>
+            <button id="continueBtn" class="flex-1 text-white" onclick="continueQuiz()">繼續</button>
+        </div>
     </div>
 
     <script>
+        let currentQuestion = 0;
+        let correctCount = 0;
+        const totalQuestions = 10;
+        let questions = [];
+
         // 檢查是否為質數的函數
         function isPrime(num) {
             if (num <= 1) return false;
@@ -68,9 +116,7 @@
         function getDivisors(num) {
             let divisors = [];
             for (let i = 1; i <= num; i++) {
-                if (num % i === 0) {
-                    divisors.push(i);
-                }
+                if (num % i === 0) divisors.push(i);
             }
             return divisors;
         }
@@ -80,15 +126,8 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        // 生成選擇題的函數
-        function generateQuiz() {
-            document.getElementById('result').innerHTML = '';
-            document.getElementById('explanation').innerHTML = '';
-            document.getElementById('explanation').classList.add('hidden');
-            document.getElementById('nextBtn').classList.add('hidden');
-            const optionsDiv = document.getElementById('options');
-            optionsDiv.innerHTML = '';
-
+        // 初始化10題
+        function initializeQuestions() {
             let primes = [];
             let composites = [];
             for (let i = 1; i <= 100; i++) {
@@ -96,24 +135,47 @@
                 else if (i > 1) composites.push(i);
             }
 
-            const primeIndex = getRandomNumber(0, primes.length - 1);
-            const prime = primes[primeIndex];
+            for (let i = 0; i < totalQuestions; i++) {
+                const primeIndex = getRandomNumber(0, primes.length - 1);
+                const prime = primes[primeIndex];
 
-            let selectedComposites = [];
-            while (selectedComposites.length < 4) {
-                const compositeIndex = getRandomNumber(0, composites.length - 1);
-                const composite = composites[compositeIndex];
-                if (!selectedComposites.includes(composite) && composite !== prime) {
-                    selectedComposites.push(composite);
+                let selectedComposites = [];
+                while (selectedComposites.length < 4) {
+                    const compositeIndex = getRandomNumber(0, composites.length - 1);
+                    const composite = composites[compositeIndex];
+                    if (!selectedComposites.includes(composite) && composite !== prime) {
+                        selectedComposites.push(composite);
+                    }
                 }
+
+                let options = [prime, ...selectedComposites];
+                options.sort(() => Math.random() - 0.5);
+                questions.push({ prime, options });
+            }
+        }
+
+        // 生成當前題目
+        function generateQuiz() {
+            if (currentQuestion >= totalQuestions) {
+                showSummary();
+                return;
             }
 
-            let options = [prime, ...selectedComposites];
-            options.sort(() => Math.random() - 0.5);
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('explanation').innerHTML = '';
+            document.getElementById('explanation').classList.add('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('summary').classList.add('hidden');
+            document.getElementById('buttonGroup').classList.add('hidden');
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+
+            const { prime, options } = questions[currentQuestion];
+            document.getElementById('progress').textContent = `進度: ${currentQuestion + 1}/${totalQuestions}`;
 
             options.forEach((num) => {
                 const optionDiv = document.createElement('div');
-                optionDiv.className = 'option bg-indigo-100 text-indigo-800 py-1 px-3 rounded cursor-pointer text-center font-medium text-sm sm:text-base';
+                optionDiv.className = 'option bg-indigo-100 text-indigo-900 py-1 px-3 rounded cursor-pointer text-center font-medium text-sm sm:text-base';
                 optionDiv.innerHTML = num;
                 optionDiv.onclick = () => checkAnswer(num, prime, options);
                 optionsDiv.appendChild(optionDiv);
@@ -137,10 +199,11 @@
 
             if (selected === prime) {
                 resultDiv.innerHTML = '🎉 正確！這是質數！';
-                resultDiv.className = 'mt-2 text-center font-semibold text-sm sm:text-base text-green-600';
+                resultDiv.className = 'mt-2 text-center font-semibold text-sm sm:text-base text-green-700';
+                correctCount++;
             } else {
                 resultDiv.innerHTML = `❌ 錯誤！正確答案是 ${prime}！`;
-                resultDiv.className = 'mt-2 text-center font-semibold text-sm sm:text-base text-red-600';
+                resultDiv.className = 'mt-2 text-center font-semibold text-sm sm:text-base text-red-700';
                 const divisors = getDivisors(selected);
                 explanationDiv.innerHTML = `📝 解釋：${selected} 不是質數，因為它可以被 ${divisors.join(', ')} 整除。質數只能被 1 和它本身整除。`;
                 explanationDiv.classList.remove('hidden');
@@ -149,7 +212,47 @@
             nextBtn.classList.remove('hidden');
         }
 
-        // 初始化第一題
+        // 下一題或結束
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < totalQuestions) {
+                generateQuiz();
+            } else {
+                showSummary();
+            }
+        }
+
+        // 顯示總結
+        function showSummary() {
+            const accuracy = (correctCount / totalQuestions) * 100;
+            document.getElementById('options').innerHTML = '';
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('explanation').classList.add('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('summary').innerHTML = `🎉 測試結束！您答對 ${correctCount} 題，共 ${totalQuestions} 題，正確率為 ${accuracy.toFixed(1)}%!`;
+            document.getElementById('summary').classList.remove('hidden');
+            document.getElementById('buttonGroup').classList.remove('hidden');
+        }
+
+        // 結束測驗
+        function endQuiz() {
+            document.getElementById('summary').innerHTML = `🎉 測驗已結束！感謝您的參與！正確率為 ${(correctCount / totalQuestions * 100).toFixed(1)}%!`;
+            document.getElementById('buttonGroup').classList.add('hidden');
+        }
+
+        // 繼續測驗
+        function continueQuiz() {
+            currentQuestion = 0;
+            correctCount = 0;
+            questions = [];
+            initializeQuestions();
+            generateQuiz();
+            document.getElementById('summary').classList.add('hidden');
+            document.getElementById('buttonGroup').classList.add('hidden');
+        }
+
+        // 初始化並開始
+        initializeQuestions();
         generateQuiz();
     </script>
 </body>
