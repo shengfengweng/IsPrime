@@ -9,20 +9,22 @@
     <style>
         body {
             background: linear-gradient(135deg, #f0f4ff 0%, #d6e0fa 50%, #c0d2f0 100%);
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
+            padding: 1rem 0;
         }
         .quiz-container {
-            max-height: 90vh;
-            overflow-y: auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 1.5rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
             backdrop-filter: blur(5px);
             animation: fadeInUp 0.6s ease-out;
+            width: 90%;
+            max-width: 28rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
         }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
@@ -32,6 +34,8 @@
             transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
             border-radius: 0.75rem;
             background: linear-gradient(145deg, #eef2ff, #e0e7ff);
+            padding: 0.75rem;
+            margin: 0.25rem 0;
         }
         .option:hover {
             transform: translateY(-4px);
@@ -51,8 +55,10 @@
             border-radius: 0.75rem;
             background: linear-gradient(145deg, #6366f1, #4f46e5);
             transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-            padding: 0.5rem;
+            padding: 0.75rem;
             font-weight: 500;
+            width: 100%;
+            margin: 0.5rem 0;
         }
         #nextBtn:hover, #endBtn:hover, #continueBtn:hover {
             transform: translateY(-2px);
@@ -62,7 +68,8 @@
         #summary {
             background: linear-gradient(145deg, #e0e7ff, #d1e0fa);
             border-radius: 0.75rem;
-            padding: 0.5rem;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
         }
         .button-group {
             display: flex;
@@ -71,11 +78,11 @@
         }
     </style>
 </head>
-<body class="p-2 font-['Noto_Sans_TC']">
-    <div class="quiz-container p-4 sm:p-6 w-full max-w-sm sm:max-w-md md:max-w-lg flex flex-col items-center justify-between">
+<body class="font-['Noto_Sans_TC']">
+    <div class="quiz-container flex flex-col items-center">
         <div class="text-center w-full">
             <div class="flex justify-center mb-2">
-                <img src="LOGO.png" alt="史弟夫數學 Logo" class="h-12 sm:h-16" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <img src="logo.png" alt="史弟夫數學 Logo" class="h-12 sm:h-16" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <div class="hidden text-center" style="font-family: 'Pacifico', cursive;">
                     <span class="text-xl sm:text-2xl font-bold text-indigo-900">史弟夫</span><br>
                     <span class="text-xl sm:text-2xl font-bold text-indigo-900">數學</span>
